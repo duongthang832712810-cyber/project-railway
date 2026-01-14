@@ -26,4 +26,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # 6. Chạy server
-CMD ["sh", "-c", "uvicorn server_api:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["python", "server_api.py"]

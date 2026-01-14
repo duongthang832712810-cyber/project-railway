@@ -62,6 +62,11 @@ async def predict(file: UploadFile = File(...)):
         return {"status": "error", "message": str(e), "number": None}
 if __name__ == "__main__":
     import uvicorn
-    # Lấy cổng từ biến môi trường PORT, nếu không có thì mặc định 8000 (chạy local)
-    port = int(os.environ.get("PORT", 8000)) 
+    import os
+    
+    # Lấy cổng từ biến môi trường (Environment Variable)
+    # Nếu không có (chạy local) thì dùng 8000
+    port = int(os.environ.get("PORT", 8000))
+    
+    print(f"Server đang chạy trên cổng: {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
