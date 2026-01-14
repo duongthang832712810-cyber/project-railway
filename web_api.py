@@ -6,7 +6,6 @@ import asyncio
 import os
 import uvicorn
 
-# ================= CẤU HÌNH =================
 MODEL_PATH = "yolov8n1200.pt" 
 app = FastAPI()
 
@@ -23,12 +22,12 @@ model_lock = asyncio.Lock()
 
 @app.get("/")
 def home():
-    return {"message": "Hello World! Server is running."}
+    return {"message": "Hello World! Server is Ready."}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     if not model:
-        return {"status": "error", "message": "Model error"}
+        return {"status": "error", "message": "Model not loaded"}
     try:
         image_bytes = await file.read()
         image = Image.open(io.BytesIO(image_bytes))
@@ -50,12 +49,14 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         return {"status": "error", "message": str(e), "number": None}
 
-# --- PHẦN QUAN TRỌNG NHẤT: FIX LỖI PORT TẠI ĐÂY ---
+# --- PHẦN QUAN TRỌNG ĐỂ FIX LỖI ---
 if __name__ == "__main__":
-    # Lấy cổng từ biến môi trường, nếu không có thì dùng 8000
-    # Ép kiểu sang int để tránh lỗi "not a valid integer"
-    port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 SERVER ĐANG KHỞI ĐỘNG TẠI PORT: {port}")
+    # Logic: Lấy Port Railway cấp. Nếu không có (lỗi) thì lấy 8000.
+    # Ép kiểu int() tại đây để trị dứt điểm lỗi "Invalid integer"
+    try:
+        port = int(os.environ.get("PORT", 8000))
+    except ValueError:
+        port = 8000
     
-    # Chạy uvicorn trực tiếp từ Python
+    print(f"🚀 SERVER CHẠY TRÊN PORT: {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
