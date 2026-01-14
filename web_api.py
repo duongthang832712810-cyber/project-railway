@@ -50,10 +50,12 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         return {"status": "error", "message": str(e), "number": None}
 
-# --- QUAN TRỌNG: PHẦN NÀY SẼ XỬ LÝ PORT ---
+# --- PHẦN QUAN TRỌNG NHẤT ĐỂ FIX LỖI ---
 if __name__ == "__main__":
     # Lấy PORT từ biến môi trường, ép kiểu sang int ngay lập tức
+    # Nếu chạy local thì mặc định là 8000
     port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 STARTING SERVER ON PORT: {port}")
-    # Chạy uvicorn từ trong Python
+    print(f"🚀 SERVER BẮT ĐẦU CHẠY TRÊN PORT: {port}")
+    
+    # Chạy uvicorn từ trong code Python
     uvicorn.run(app, host="0.0.0.0", port=port)
